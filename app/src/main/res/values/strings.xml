@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Place and Entertainment Search</string>
+    <string name="ma_tab_search">Search</string>
+    <string name="ma_tab_favorites">Favorites</string>
+</resources>
