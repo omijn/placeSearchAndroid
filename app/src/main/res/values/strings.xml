@@ -1,5 +1,15 @@
 <resources>
+    <!--main activity-->
     <string name="app_name">Place and Entertainment Search</string>
     <string name="ma_tab_search">Search</string>
     <string name="ma_tab_favorites">Favorites</string>
+
+    <!--details activity-->
+    <string name="da_tab_info">Info</string>
+    <string name="da_tab_photos">Photos</string>
+    <string name="da_tab_map">Map</string>
+    <string name="da_tab_reviews">Reviews</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

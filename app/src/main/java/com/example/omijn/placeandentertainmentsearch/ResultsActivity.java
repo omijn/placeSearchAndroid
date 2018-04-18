@@ -1,14 +1,18 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,7 +24,7 @@ public class ResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results);
 
         // create data (or get data from prev intent)
-        ArrayList<PlaceResult> sampleData = new ArrayList<>();
+        final ArrayList<PlaceResult> sampleData = new ArrayList<>();
         sampleData.add(new PlaceResult("USC", "Los Angeles"));
         sampleData.add(new PlaceResult("UCLA", "Los Angeles"));
         sampleData.add(new PlaceResult("UC Irvine", "Irvine"));
@@ -45,6 +49,16 @@ public class ResultsActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.lv_place_results);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(ResultsActivity.this, sampleData.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+                // on item click, go to DetailsActivity and pass some data
+
+            }
+        });
     }
 
     public class PlaceResultAdapter extends ArrayAdapter<PlaceResult> {
