@@ -1,6 +1,7 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 
 public class DetailsActivity extends AppCompatActivity {
@@ -33,6 +35,24 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        mDetailsActivityPagerAdapter = new DetailsActivityPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.da_vp_container);
+        mViewPager.setAdapter(mDetailsActivityPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        Intent receivedIntent = getIntent();
+        if (receivedIntent.hasExtra(Intent.EXTRA_TEXT)) {
+            String textFromResultsActivity = receivedIntent.getStringExtra(Intent.EXTRA_TEXT);
+
+            Toast.makeText(this, textFromResultsActivity, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class DetailsActivityPagerAdapter extends FragmentPagerAdapter {
@@ -44,13 +64,13 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0)
-                return new SearchFragment(); // first tab
+                return new InfoFragment(); // first tab
             else if (position == 1)
-                return new FavoritesFragment(); // second tab
+                return new PhotosFragment(); // second tab
             else if (position == 2)
-                return new FavoritesFragment(); // third tab
+                return new MapFragment(); // third tab
             else
-                return new FavoritesFragment(); // fourth tab
+                return new ReviewsFragment(); // fourth tab
 
         }
 

@@ -56,7 +56,9 @@ public class ResultsActivity extends AppCompatActivity {
                 Toast.makeText(ResultsActivity.this, sampleData.get(position).getName(), Toast.LENGTH_SHORT).show();
 
                 // on item click, go to DetailsActivity and pass some data
-
+                Intent intent = new Intent(view.getContext(), DetailsActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, sampleData.get(position).getName());
+                startActivity(intent);
             }
         });
     }
