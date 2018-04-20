@@ -36,12 +36,12 @@
                 android:id="@+id/tabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_search_24dp"
+                android:icon="@drawable/search"
                 android:text="@string/ma_tab_search" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem2"
-                android:icon="@drawable/icon_favorite_24dp"
+                android:icon="@drawable/heart_fill_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ma_tab_favorites" />

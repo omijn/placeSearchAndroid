@@ -24,28 +24,28 @@
                 android:id="@+id/da_tabItem1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_search_24dp"
+                android:icon="@drawable/search"
                 android:text="@string/da_tab_info" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/da_tabItem2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_favorite_24dp"
+                android:icon="@drawable/heart_fill_white"
                 android:text="@string/da_tab_photos" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/da_tabItem3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_search_24dp"
+                android:icon="@drawable/maps"
                 android:text="@string/da_tab_map" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/da_tabItem4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/icon_search_24dp"
+                android:icon="@drawable/review"
                 android:text="@string/da_tab_reviews" />
 
         </android.support.design.widget.TabLayout>
