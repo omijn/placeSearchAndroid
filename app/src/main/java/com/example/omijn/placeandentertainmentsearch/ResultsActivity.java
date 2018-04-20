@@ -15,6 +15,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -85,15 +91,32 @@ public class ResultsActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.lv_place_results);
         listView.setAdapter(adapter);
 
+        final RequestQueue queue = Volley.newRequestQueue(this);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ResultsActivity.this, listData.get(position).getName(), Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+//                Toast.makeText(ResultsActivity.this, listData.get(position).getName(), Toast.LENGTH_SHORT).show();
 
-                // on item click, go to DetailsActivity and pass some data
-                Intent intent = new Intent(view.getContext(), DetailsActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, listData.get(position).getName());
-                startActivity(intent);
+                String detailsUrl = NetworkUtils.buildDetailsUrl(listData.get(position).getPlace_id());
+                final Intent intent = new Intent(view.getContext(), DetailsActivity.class);
+
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, detailsUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        intent.putExtra(Intent.EXTRA_TEXT, response);
+                        startActivity(intent);
+                    }
+                },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(view.getContext(), "A network error occurred.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                queue.add(stringRequest);
             }
         });
     }

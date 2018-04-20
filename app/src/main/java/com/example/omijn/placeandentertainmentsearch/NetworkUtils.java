@@ -13,10 +13,11 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private static final String API_BASE_URL =  "http://hw8-victorykashyap601206.codeanyapp.com:8081/nearby";
+    private static final String API_BASE_URL =  "http://hw8-victorykashyap601206.codeanyapp.com:8081";
 
     public static URL buildUrl(String placeName) {
         Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
+                .appendPath("nearby")
                 .appendQueryParameter("keyword", placeName)
                 .appendQueryParameter("category", "default")
                 .appendQueryParameter("distance", "10")
@@ -32,6 +33,22 @@ public class NetworkUtils {
         }
 
         return url;
+    }
+
+    public static String buildDetailsUrl(String placeId) {
+        Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
+                .appendPath("details")
+                .appendQueryParameter("place_id", placeId)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url.toString();
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {

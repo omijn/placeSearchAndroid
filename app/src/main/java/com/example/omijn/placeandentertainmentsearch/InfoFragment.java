@@ -12,11 +12,13 @@ import android.view.ViewGroup;
  * A simple {@link Fragment} subclass.
  */
 public class InfoFragment extends Fragment {
-
+    // TODO: 4/20/18 1) Declare Views
 
     public InfoFragment() {
         // Required empty public constructor
     }
+
+    // TODO: 4/20/18 2) Create constructor to take in values to be populated in views
 
 
     @Override
@@ -24,6 +26,8 @@ public class InfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_info, container, false);
+        // TODO: 4/20/18 3) on inflated view, use findViewById to get references to views
+        // TODO: 4/20/18 4) populate views with data
     }
 
 }

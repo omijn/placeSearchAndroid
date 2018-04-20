@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".InfoFragment">
 
+    <!--TODO: 4/20/18 0) Create views -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
