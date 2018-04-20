@@ -2,6 +2,7 @@ package com.example.omijn.placeandentertainmentsearch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,9 +121,9 @@ public class ResultsActivity extends AppCompatActivity {
             TextView addressTextView = listItemView.findViewById(R.id.tv_place_result_address);
             addressTextView.setText(currentPlaceResult.getAddress());
 
-            // fill place_id
-            TextView placeIdTextView = listItemView.findViewById(R.id.tv_place_result_place_id);
-            placeIdTextView.setText(currentPlaceResult.getPlace_id());
+            // fill icon
+            ImageView iconImageView = listItemView.findViewById(R.id.iv_place_result_icon);
+            Picasso.get().load(currentPlaceResult.getIcon()).into(iconImageView);
 
             return listItemView;
         }
