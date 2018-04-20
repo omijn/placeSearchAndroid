@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,50 +13,82 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class ResultsActivity extends AppCompatActivity {
+
+    private ArrayList<PlaceResult> listData;
+    private PlaceResultAdapter adapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        // create data (or get data from prev intent)
-        final ArrayList<PlaceResult> sampleData = new ArrayList<>();
-        sampleData.add(new PlaceResult("USC", "Los Angeles"));
-        sampleData.add(new PlaceResult("UCLA", "Los Angeles"));
-        sampleData.add(new PlaceResult("UC Irvine", "Irvine"));
-        sampleData.add(new PlaceResult("UCSD", "San Diego"));
-        sampleData.add(new PlaceResult("NCSU", "Raleigh"));
-        sampleData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
-        sampleData.add(new PlaceResult("USC", "Los Angeles"));
-        sampleData.add(new PlaceResult("UCLA", "Los Angeles"));
-        sampleData.add(new PlaceResult("UC Irvine", "Irvine"));
-        sampleData.add(new PlaceResult("UCSD", "San Diego"));
-        sampleData.add(new PlaceResult("NCSU", "Raleigh"));
-        sampleData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
-        sampleData.add(new PlaceResult("USC", "Los Angeles"));
-        sampleData.add(new PlaceResult("UCLA", "Los Angeles"));
-        sampleData.add(new PlaceResult("UC Irvine", "Irvine"));
-        sampleData.add(new PlaceResult("UCSD", "San Diego"));
-        sampleData.add(new PlaceResult("NCSU", "Raleigh"));
-        sampleData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
+        listData = new ArrayList<>();
+
+        // get data from MainActivity
+        Intent callingIntent = getIntent();
+        if (callingIntent.hasExtra(Intent.EXTRA_TEXT)) {
+            String jsonData = callingIntent.getStringExtra(Intent.EXTRA_TEXT);
+
+            try {
+                JSONObject jsonObject = new JSONObject(jsonData);
+                JSONArray resultsArray = jsonObject.getJSONArray("results");
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject res = resultsArray.getJSONObject(i);
+                    String address = res.getString("address");
+                    String coords = res.getString("coords");
+                    String icon = res.getString("icon");
+                    String name = res.getString("name");
+                    String place_id = res.getString("place_id");
+                    listData.add(new PlaceResult(name, address, icon, place_id, coords));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // sample data
+
+//        listData.add(new PlaceResult("USC", "Los Angeles"));
+//        listData.add(new PlaceResult("UCLA", "Los Angeles"));
+//        listData.add(new PlaceResult("UC Irvine", "Irvine"));
+//        listData.add(new PlaceResult("UCSD", "San Diego"));
+//        listData.add(new PlaceResult("NCSU", "Raleigh"));
+//        listData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
+//        listData.add(new PlaceResult("USC", "Los Angeles"));
+//        listData.add(new PlaceResult("UCLA", "Los Angeles"));
+//        listData.add(new PlaceResult("UC Irvine", "Irvine"));
+//        listData.add(new PlaceResult("UCSD", "San Diego"));
+//        listData.add(new PlaceResult("NCSU", "Raleigh"));
+//        listData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
+//        listData.add(new PlaceResult("USC", "Los Angeles"));
+//        listData.add(new PlaceResult("UCLA", "Los Angeles"));
+//        listData.add(new PlaceResult("UC Irvine", "Irvine"));
+//        listData.add(new PlaceResult("UCSD", "San Diego"));
+//        listData.add(new PlaceResult("NCSU", "Raleigh"));
+//        listData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
 
         // new adapter
-        PlaceResultAdapter adapter = new PlaceResultAdapter(this, sampleData);
+        adapter = new PlaceResultAdapter(this, listData);
 
-        ListView listView = (ListView) findViewById(R.id.lv_place_results);
+        listView = (ListView) findViewById(R.id.lv_place_results);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ResultsActivity.this, sampleData.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ResultsActivity.this, listData.get(position).getName(), Toast.LENGTH_SHORT).show();
 
                 // on item click, go to DetailsActivity and pass some data
                 Intent intent = new Intent(view.getContext(), DetailsActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, sampleData.get(position).getName());
+                intent.putExtra(Intent.EXTRA_TEXT, listData.get(position).getName());
                 startActivity(intent);
             }
         });
@@ -86,9 +117,17 @@ public class ResultsActivity extends AppCompatActivity {
             TextView addressTextView = listItemView.findViewById(R.id.tv_place_result_address);
             addressTextView.setText(currentPlaceResult.getAddress());
 
+            // fill place_id
+            TextView placeIdTextView = listItemView.findViewById(R.id.tv_place_result_place_id);
+            placeIdTextView.setText(currentPlaceResult.getPlace_id());
+
             return listItemView;
         }
-
-
     }
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        adapter.notifyDataSetChanged();
+//    }
 }
