@@ -25,11 +25,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class DetailsActivity extends AppCompatActivity {
 
     private DetailsActivityPagerAdapter mDetailsActivityPagerAdapter;
     private ViewPager mViewPager;
+    private String textFromResultsActivity;
+
+    private String infoFragmentAddress;
+    private String infoFragmentPhone;
+    private int infoFragmentPrice;
+    private double infoFragmentRating;
+    private String infoFragmentGooglePage;
+    private String infoFragmentWebsite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +62,19 @@ public class DetailsActivity extends AppCompatActivity {
         if (receivedIntent.hasExtra(Intent.EXTRA_TEXT)) {
             String textFromResultsActivity = receivedIntent.getStringExtra(Intent.EXTRA_TEXT);
 
-            Toast.makeText(this, textFromResultsActivity, Toast.LENGTH_SHORT).show();
+            try {
+                JSONObject jsonData = new JSONObject(textFromResultsActivity);
+                JSONObject placeDetails = jsonData.getJSONObject("json").getJSONObject("result");
+                infoFragmentAddress = placeDetails.optString("formatted_address", null);
+                infoFragmentPhone = placeDetails.optString("formatted_phone_number", null);
+                infoFragmentPrice = placeDetails.optInt("price_level", -1);
+                infoFragmentRating = placeDetails.optDouble("rating", -1);
+                infoFragmentGooglePage = placeDetails.optString("url", null);
+                infoFragmentWebsite = placeDetails.optString("website", null);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -63,8 +86,22 @@ public class DetailsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0)
-                return new InfoFragment(); // first tab
+            if (position == 0) {
+                InfoFragment infoFragment = new InfoFragment(); // first tab
+                Bundle args = infoFragment.getArguments();
+                if (args == null) {
+                    args = new Bundle();
+                }
+                args.putString("address", infoFragmentAddress);
+                args.putString("phone", infoFragmentPhone);
+                args.putInt("price", infoFragmentPrice);
+                args.putDouble("rating", infoFragmentRating);
+                args.putString("google_page", infoFragmentGooglePage);
+                args.putString("website", infoFragmentWebsite);
+
+                infoFragment.setArguments(args);
+                return infoFragment;
+            }
             else if (position == 1)
                 return new PhotosFragment(); // second tab
             else if (position == 2)
