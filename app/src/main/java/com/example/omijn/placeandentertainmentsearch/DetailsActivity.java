@@ -35,6 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private String textFromResultsActivity;
 
+    private String placeId;
+
     private String infoFragmentAddress;
     private String infoFragmentPhone;
     private int infoFragmentPrice;
@@ -71,10 +73,11 @@ public class DetailsActivity extends AppCompatActivity {
                 infoFragmentRating = placeDetails.optDouble("rating", -1);
                 infoFragmentGooglePage = placeDetails.optString("url", null);
                 infoFragmentWebsite = placeDetails.optString("website", null);
+
+                placeId = placeDetails.getString("place_id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -102,8 +105,17 @@ public class DetailsActivity extends AppCompatActivity {
                 infoFragment.setArguments(args);
                 return infoFragment;
             }
-            else if (position == 1)
-                return new PhotosFragment(); // second tab
+            else if (position == 1) {
+                PhotosFragment photosFragment = new PhotosFragment(); // second tab
+                Bundle args = photosFragment.getArguments();
+                if (args == null) {
+                    args = new Bundle();
+                }
+                args.putString("place_id", placeId);
+                photosFragment.setArguments(args);
+
+                return photosFragment;
+            }
             else if (position == 2)
                 return new MapFragment(); // third tab
             else

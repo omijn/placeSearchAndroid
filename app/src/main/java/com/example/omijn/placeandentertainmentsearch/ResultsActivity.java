@@ -108,13 +108,12 @@ public class ResultsActivity extends AppCompatActivity {
                         intent.putExtra(Intent.EXTRA_TEXT, response);
                         startActivity(intent);
                     }
-                },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(view.getContext(), "A network error occurred.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(view.getContext(), "A network error occurred.", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 queue.add(stringRequest);
             }

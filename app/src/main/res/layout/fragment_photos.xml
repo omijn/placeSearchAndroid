@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".PhotosFragment">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Photos Fragment"
-        android:textSize="22sp"
-        android:padding="16dp"/>
+        android:id="@+id/da_pf_rv_photos">
+
+    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>
