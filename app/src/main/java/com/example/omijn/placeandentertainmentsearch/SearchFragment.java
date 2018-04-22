@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -25,7 +29,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // get search button and attach event listener
-        Button searchButton = (Button) view.findViewById(R.id.button_search);
+        Button searchButton = view.findViewById(R.id.ma_sf_button_search);
         searchButton.setOnClickListener(this);
 
         return view;
@@ -40,6 +44,38 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
      */
     @Override
     public void onClick(View v) {
+
+
+        TextView keywordTextView = getActivity().findViewById(R.id.ma_sf_et_keyword);
+        String keyword = keywordTextView.getText().toString();
+
+        Spinner categorySpinner = getActivity().findViewById(R.id.ma_sf_sp_category);
+        String category = categorySpinner.getSelectedItem().toString();
+
+        TextView distanceTextView = getActivity().findViewById(R.id.ma_sf_et_distance);
+        String distance = distanceTextView.getText().toString();
+
+        RadioButton radioButton1 = getActivity().findViewById(R.id.ma_sf_radio1);
+        RadioButton radioButton2 = getActivity().findViewById(R.id.ma_sf_radio2);
+
+        EditText radio2Location = getActivity().findViewById(R.id.ma_sf_et_radio2_location);
+
+        String locationType = null;
+        String location = null;
+
+        if (radioButton1.isChecked()) {
+            locationType = "coords";
+            location = "34.0266,-118.2831";
+//            location = getCurrentLocation();
+        } else {
+            locationType = "address";
+            location = radio2Location.getText().toString();
+        }
+
+
+        // TODO: 4/22/18 validate form
+
+
         // show progress dialog
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Fetching results");
@@ -48,7 +84,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         // validate input form data
 
         // build URL using form data
-        URL url = NetworkUtils.buildUrl("USC");
+        URL url = NetworkUtils.buildUrl(keyword, category, distance, locationType, location);
 
         new GetWebDataTask().execute(url);
 
