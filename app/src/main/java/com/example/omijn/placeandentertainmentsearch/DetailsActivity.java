@@ -35,14 +35,22 @@ public class DetailsActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private String textFromResultsActivity;
 
-    private String placeId;
-
+    // info fragment data
     private String infoFragmentAddress;
     private String infoFragmentPhone;
     private int infoFragmentPrice;
     private double infoFragmentRating;
     private String infoFragmentGooglePage;
     private String infoFragmentWebsite;
+
+    // photos fragment data
+    private String placeId;
+
+    // map fragment data
+    private Double mapFragmentLat;
+    private Double mapFragmentLng;
+    private String mapFragmentName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,8 @@ public class DetailsActivity extends AppCompatActivity {
             try {
                 JSONObject jsonData = new JSONObject(textFromResultsActivity);
                 JSONObject placeDetails = jsonData.getJSONObject("json").getJSONObject("result");
+
+                // extract data for info fragment
                 infoFragmentAddress = placeDetails.optString("formatted_address", null);
                 infoFragmentPhone = placeDetails.optString("formatted_phone_number", null);
                 infoFragmentPrice = placeDetails.optInt("price_level", -1);
@@ -74,7 +84,15 @@ public class DetailsActivity extends AppCompatActivity {
                 infoFragmentGooglePage = placeDetails.optString("url", null);
                 infoFragmentWebsite = placeDetails.optString("website", null);
 
+                // extract data for photos fragment
                 placeId = placeDetails.getString("place_id");
+
+                // extract data for map fragment
+                mapFragmentLat = placeDetails.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                mapFragmentLng = placeDetails.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                mapFragmentName = placeDetails.getString("name");
+
+                // extract data for reviews fragment
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -104,8 +122,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 infoFragment.setArguments(args);
                 return infoFragment;
-            }
-            else if (position == 1) {
+            } else if (position == 1) {
                 PhotosFragment photosFragment = new PhotosFragment(); // second tab
                 Bundle args = photosFragment.getArguments();
                 if (args == null) {
@@ -115,10 +132,20 @@ public class DetailsActivity extends AppCompatActivity {
                 photosFragment.setArguments(args);
 
                 return photosFragment;
-            }
-            else if (position == 2)
-                return new MapFragment(); // third tab
-            else
+            } else if (position == 2) {
+                MapFragment mapFragment = new MapFragment(); // third tab
+                Bundle args = mapFragment.getArguments();
+                if (args == null) {
+                    args = new Bundle();
+                }
+                args.putDouble("lat", mapFragmentLat);
+                args.putDouble("lng", mapFragmentLng);
+                args.putString("name", mapFragmentName);
+
+                mapFragment.setArguments(args);
+
+                return mapFragment;
+            } else
                 return new ReviewsFragment(); // fourth tab
 
         }

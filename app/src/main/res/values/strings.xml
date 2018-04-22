@@ -11,4 +11,14 @@
     <string name="da_tab_reviews">Reviews</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <string name="google_maps_key">AIzaSyD1lLYLgXAV3QT8diQ-J2P5Av0KyErEag8</string>
+
+    <!--details activity > map fragment > travel mode spinner-->
+    <string-array name="travel_mode">
+        <item>Driving</item>
+        <item>Walking</item>
+        <item>Bicycling</item>
+        <item>Transit</item>
+    </string-array>
 </resources>
