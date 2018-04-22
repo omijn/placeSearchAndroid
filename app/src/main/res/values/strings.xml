@@ -4,6 +4,28 @@
     <string name="ma_tab_search">Search</string>
     <string name="ma_tab_favorites">Favorites</string>
 
+    <!--main activity > search fragment-->
+    <string name="ma_sf_keyword">Keyword</string>
+    <string name="ma_sf_keyword_hint">Enter keyword</string>
+    <string name="ma_sf_category">Category</string>
+    <string name="ma_sf_distance">Distance (in miles)</string>
+    <string name="ma_sf_distance_hint">Enter distance (default 10 miles)</string>
+    <string name="ma_sf_from">From</string>
+    <string name="ma_sf_from_radio1">Current location</string>
+    <string name="ma_sf_from_radio2">Other.Specify location</string>
+    <string name="ma_sf_from_radio2_hint">Type in the location</string>
+    <string name="ma_sf_search">Search</string>
+    <string name="ma_sf_clear">Clear</string>
+
+    <!-- main activity > search fragment > category -->
+    <string-array name="category">
+        <item>Default</item>
+        <item>Default</item>
+        <item>Default</item>
+        <item>Default</item>
+    </string-array>
+
+
     <!--details activity-->
     <string name="da_tab_info">Info</string>
     <string name="da_tab_photos">Photos</string>

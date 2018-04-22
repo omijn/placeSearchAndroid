@@ -4,19 +4,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".SearchFragment">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ma_sf_keyword" />
+
+    <EditText
+        android:id="@+id/ma_sf_et_keyword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/ma_sf_keyword_hint" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ma_sf_category" />
+
+    <Spinner
+        android:id="@+id/ma_sf_sp_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/category"
+        android:padding="8dp">
+
+    </Spinner>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ma_sf_distance" />
+
+    <EditText
+        android:id="@+id/ma_sf_et_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/ma_sf_distance_hint" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Search Fragment"
-        android:textSize="22sp"/>
+        android:text="@string/ma_sf_from"/>
 
-    <Button
-        android:id="@+id/button_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/ma_sf_radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ma_sf_from_radio1"/>
+
+        <RadioButton
+            android:id="@+id/ma_sf_radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ma_sf_from_radio2"/>
+        <EditText
+            android:id="@+id/ma_sf_et_radio2_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/ma_sf_from_radio2_hint"/>
+    </RadioGroup>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/ma_sf_button_search"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/ma_sf_search" />
+
+        <Button
+            android:id="@+id/ma_sf_button_clear"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/ma_sf_clear" />
+
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
