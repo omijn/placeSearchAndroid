@@ -58,6 +58,7 @@ public class PhotosFragment extends Fragment {
         // create new adapter
         adapter = new PhotosAdapter(photosData);
 
+        // TODO: 4/22/18 Set no results screen on empty response in all RecyclerViews
         // set adapter to recyclerview
         recyclerView.setAdapter(adapter);
 

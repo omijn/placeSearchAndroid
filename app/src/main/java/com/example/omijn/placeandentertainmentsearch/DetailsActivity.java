@@ -1,5 +1,6 @@
 package com.example.omijn.placeandentertainmentsearch;
 
+// TODO: 4/22/18 Remove unused imports
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;

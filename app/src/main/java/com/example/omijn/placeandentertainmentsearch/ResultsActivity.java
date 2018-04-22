@@ -64,26 +64,7 @@ public class ResultsActivity extends AppCompatActivity {
             }
         }
 
-        // sample data
-
-//        listData.add(new PlaceResult("USC", "Los Angeles"));
-//        listData.add(new PlaceResult("UCLA", "Los Angeles"));
-//        listData.add(new PlaceResult("UC Irvine", "Irvine"));
-//        listData.add(new PlaceResult("UCSD", "San Diego"));
-//        listData.add(new PlaceResult("NCSU", "Raleigh"));
-//        listData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
-//        listData.add(new PlaceResult("USC", "Los Angeles"));
-//        listData.add(new PlaceResult("UCLA", "Los Angeles"));
-//        listData.add(new PlaceResult("UC Irvine", "Irvine"));
-//        listData.add(new PlaceResult("UCSD", "San Diego"));
-//        listData.add(new PlaceResult("NCSU", "Raleigh"));
-//        listData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
-//        listData.add(new PlaceResult("USC", "Los Angeles"));
-//        listData.add(new PlaceResult("UCLA", "Los Angeles"));
-//        listData.add(new PlaceResult("UC Irvine", "Irvine"));
-//        listData.add(new PlaceResult("UCSD", "San Diego"));
-//        listData.add(new PlaceResult("NCSU", "Raleigh"));
-//        listData.add(new PlaceResult("Virginia Tech", "Blacksburg"));
+        // TODO: 4/22/18 Change this to a RecyclerView
 
         // new adapter
         adapter = new PlaceResultAdapter(this, listData);

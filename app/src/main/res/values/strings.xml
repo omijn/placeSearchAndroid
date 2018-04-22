@@ -12,11 +12,14 @@
     <string name="ma_sf_distance_hint">Enter distance (default 10 miles)</string>
     <string name="ma_sf_from">From</string>
     <string name="ma_sf_from_radio1">Current location</string>
-    <string name="ma_sf_from_radio2">Other.Specify location</string>
+    <string name="ma_sf_from_radio2">Other. Specify location</string>
     <string name="ma_sf_from_radio2_hint">Type in the location</string>
     <string name="ma_sf_search">Search</string>
     <string name="ma_sf_clear">Clear</string>
 
+    <string name="ma_sf_error_required">Please enter mandatory field</string>
+
+    <!-- TODO Add categories -->
     <!-- main activity > search fragment > category -->
     <string-array name="category">
         <item>Default</item>
