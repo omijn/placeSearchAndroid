@@ -72,6 +72,7 @@ public class InfoFragment extends Fragment {
             priceTextView.setText(new String(new char[price]).replace("\0", "$")); // repeat "$" sign "price" number of times
         }
 
+        // TODO: 4/22/18 Use RatingBar
         if (rating != -1) {
             ratingRow = v.findViewById(R.id.da_if_ll_rating);
             ratingRow.setVisibility(View.VISIBLE);

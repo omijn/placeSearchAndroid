@@ -21,4 +21,21 @@
         <item>Bicycling</item>
         <item>Transit</item>
     </string-array>
+
+    <!--details activity > reviews fragment > review service spinner-->
+    <string-array name="review_service">
+        <item>Google Reviews</item>
+        <item>Yelp Reviews</item>
+    </string-array>
+
+    <!--details activity > reviews fragment > review sort order spinner-->
+    <string-array name="review_sort">
+        <item>Default Order</item>
+        <item>Rating (Highest First)</item>
+        <item>Rating (Lowest First)</item>
+        <item>Date (Most Recent First)</item>
+        <item>Date (Oldest First)</item>
+    </string-array>
+
+
 </resources>

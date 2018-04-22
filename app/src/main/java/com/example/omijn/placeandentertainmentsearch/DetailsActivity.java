@@ -25,6 +25,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,11 +52,18 @@ public class DetailsActivity extends AppCompatActivity {
     private Double mapFragmentLng;
     private String mapFragmentName;
 
+    // reviews fragment data
+    private String reviewsFragmentReviews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+
+        // TODO: 4/22/18 Set Activity label to place name
+
 
         mDetailsActivityPagerAdapter = new DetailsActivityPagerAdapter(getSupportFragmentManager());
 
@@ -93,6 +101,13 @@ public class DetailsActivity extends AppCompatActivity {
                 mapFragmentName = placeDetails.getString("name");
 
                 // extract data for reviews fragment
+                JSONArray reviews = placeDetails.optJSONArray("reviews");
+                if (reviews != null) {
+                    reviewsFragmentReviews = reviews.toString();
+                } else {
+                    reviewsFragmentReviews = "";
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -120,6 +135,7 @@ public class DetailsActivity extends AppCompatActivity {
                 args.putString("google_page", infoFragmentGooglePage);
                 args.putString("website", infoFragmentWebsite);
 
+
                 infoFragment.setArguments(args);
                 return infoFragment;
             } else if (position == 1) {
@@ -142,11 +158,24 @@ public class DetailsActivity extends AppCompatActivity {
                 args.putDouble("lng", mapFragmentLng);
                 args.putString("name", mapFragmentName);
 
+
                 mapFragment.setArguments(args);
 
                 return mapFragment;
-            } else
-                return new ReviewsFragment(); // fourth tab
+            } else {
+                ReviewsFragment reviewsFragment = new ReviewsFragment(); // fourth tab
+
+                Bundle args = reviewsFragment.getArguments();
+                if (args == null) {
+                    args = new Bundle();
+                }
+                args.putString("reviews", reviewsFragmentReviews);
+
+                reviewsFragment.setArguments(args);
+
+
+                return reviewsFragment;
+            }
 
         }
 
