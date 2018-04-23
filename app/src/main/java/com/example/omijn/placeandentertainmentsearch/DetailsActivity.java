@@ -3,6 +3,7 @@ package com.example.omijn.placeandentertainmentsearch;
 // TODO: 4/22/18 Remove unused imports
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -56,6 +59,44 @@ public class DetailsActivity extends AppCompatActivity {
     // reviews fragment data
     private String reviewsFragmentReviews;
 
+    // twitter
+    private final static String hashtags = "TravelAndEntertainmentSearch";
+    private String twitterText;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.da_action_tweet:
+                openTweetLink();
+                break;
+            case R.id.da_action_favorite:
+//                toggleFavorite();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setTwitterText() {
+        twitterText = "Check out " + mapFragmentName + " located at " + infoFragmentAddress + ". Website: " + infoFragmentWebsite;
+    }
+
+    public void openTweetLink() {
+        String twitterLink = "https://twitter.com/intent/tweet?text=" + twitterText + "&hashtags=" + hashtags;
+        Uri uri = Uri.parse(twitterLink);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +104,6 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         // TODO: 4/23/18 Remove ActionBar shadow
-        // TODO: 4/23/18 Add Tweet and Favorite buttons to ActionBar
 
         mDetailsActivityPagerAdapter = new DetailsActivityPagerAdapter(getSupportFragmentManager());
 
@@ -102,6 +142,9 @@ public class DetailsActivity extends AppCompatActivity {
 
                 // set activity label to place name
                 getSupportActionBar().setTitle(mapFragmentName);
+
+                // set Twitter link text
+                setTwitterText();
 
                 // extract data for reviews fragment
                 JSONArray reviews = placeDetails.optJSONArray("reviews");
