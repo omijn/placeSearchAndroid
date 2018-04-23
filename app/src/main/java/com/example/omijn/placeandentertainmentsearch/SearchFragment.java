@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // get references to views
-        keywordEditText = view.findViewById(R.id.ma_sf_et_keyword); // TODO: 4/22/18 Google Autocomplete
+        keywordEditText = view.findViewById(R.id.ma_sf_et_keyword);
         categorySpinner = view.findViewById(R.id.ma_sf_sp_category);
         distanceEditText = view.findViewById(R.id.ma_sf_et_distance);
         radioButton1 = view.findViewById(R.id.ma_sf_radio1);

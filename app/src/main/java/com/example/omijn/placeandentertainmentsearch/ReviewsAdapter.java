@@ -12,12 +12,19 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHolder> {
     private ArrayList<Review> data;
+    private ListItemClickListener clickListener;
 
-    public ReviewsAdapter(ArrayList<Review> data) {
+    public ReviewsAdapter(ArrayList<Review> data, ListItemClickListener listener) {
         this.data = data;
+        this.clickListener = listener;
+    }
+
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
     }
 
 
@@ -47,7 +54,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
         return data.size();
     }
 
-    public class ReviewHolder extends RecyclerView.ViewHolder {
+    public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView authorPhotoImageView;
         private TextView authorNameTextView;
@@ -63,7 +70,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
             ratingRatingBar = itemView.findViewById(R.id.rb_review);
             timestampTextView = itemView.findViewById(R.id.tv_review_timestamp);
             reviewTextTextView = itemView.findViewById(R.id.tv_review_text);
+            itemView.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View v) {
+            int clickedPostition = getAdapterPosition();
+            clickListener.onListItemClick(clickedPostition);
         }
     }
 }

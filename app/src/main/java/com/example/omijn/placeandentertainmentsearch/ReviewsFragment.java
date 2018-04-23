@@ -1,6 +1,8 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +17,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReviewsFragment extends Fragment {
+public class ReviewsFragment extends Fragment implements ReviewsAdapter.ListItemClickListener {
 
     private ArrayList<Review> reviewsData;
     private ReviewsAdapter adapter;
@@ -54,6 +57,7 @@ public class ReviewsFragment extends Fragment {
                     reviewsData.add(new Review(reviewText, authorName, reviewLink, authorPhotoLink, timestamp, rating));
                 }
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -61,7 +65,7 @@ public class ReviewsFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.da_rf_rv_reviews);
         TextView emptyView = v.findViewById(R.id.da_rf_tv_no_reviews);
 
-        adapter = new ReviewsAdapter(reviewsData);
+        adapter = new ReviewsAdapter(reviewsData, this);
 
         recyclerView.setAdapter(adapter);
 
@@ -80,4 +84,13 @@ public class ReviewsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Uri reviewsPage = Uri.parse(reviewsData.get(clickedItemIndex).getReviewLink());
+        Intent intent = new Intent(Intent.ACTION_VIEW, reviewsPage);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
+    }
 }

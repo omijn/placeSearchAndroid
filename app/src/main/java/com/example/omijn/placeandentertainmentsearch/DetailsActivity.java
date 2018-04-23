@@ -62,6 +62,9 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        // TODO: 4/23/18 Remove ActionBar shadow
+        // TODO: 4/23/18 Add Tweet and Favorite buttons to ActionBar
+
         mDetailsActivityPagerAdapter = new DetailsActivityPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
