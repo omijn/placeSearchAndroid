@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -21,20 +22,26 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
 import java.net.URL;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener {
+public class SearchFragment extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "SearchFragment";
 
     private ProgressDialog progressDialog;
-    private EditText keywordEditText;
+    private AutoCompleteTextView keywordEditText;
     private Spinner categorySpinner;
     private EditText distanceEditText;
     private RadioButton radioButton1;
@@ -58,6 +65,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private boolean locationPermissionGranted = false;
     private static final int LOCATION_REQUEST_CODE = 1234;
     private FusedLocationProviderClient mFusedLocationClient;
+    private PlaceAutocompleteAdapter autocompleteAdapter;
+    private GeoDataClient mGeoDataClient;
+    private static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(-85, 180) ,new LatLng(85, -180));
 
 
     @Override
@@ -66,7 +76,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // get references to views
-        keywordEditText = view.findViewById(R.id.ma_sf_et_keyword);
+        keywordEditText = view.findViewById(R.id.ma_sf_et_keyword); // TODO: 4/22/18 Google Autocomplete
         categorySpinner = view.findViewById(R.id.ma_sf_sp_category);
         distanceEditText = view.findViewById(R.id.ma_sf_et_distance);
         radioButton1 = view.findViewById(R.id.ma_sf_radio1);
@@ -80,6 +90,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchButton.setOnClickListener(this);
         clearButton = view.findViewById(R.id.ma_sf_button_clear);
         clearButton.setOnClickListener(this);
+
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(view.getContext());
+
+        autocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGeoDataClient, BOUNDS, null);
+        keywordEditText.setAdapter(autocompleteAdapter);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
         getLocationPermissions();
@@ -144,6 +160,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             URL url = NetworkUtils.buildUrl(keyword, category, distance, locationType, location);
 
             new GetWebDataTask().execute(url);
+        } else {
+            Toast.makeText(getActivity(), R.string.fix_errors, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -234,6 +252,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
 
         return validity;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
 
