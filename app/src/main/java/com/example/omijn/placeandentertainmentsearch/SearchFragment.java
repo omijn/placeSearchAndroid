@@ -1,10 +1,16 @@
 package com.example.omijn.placeandentertainmentsearch;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +21,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.io.IOException;
 import java.net.URL;
 
 
 public class SearchFragment extends Fragment implements View.OnClickListener {
+
+    private static final String TAG = "SearchFragment";
+
     private ProgressDialog progressDialog;
     private EditText keywordEditText;
     private Spinner categorySpinner;
@@ -42,6 +55,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private String location;
 
 
+    private boolean locationPermissionGranted = false;
+    private static final int LOCATION_REQUEST_CODE = 1234;
+    private FusedLocationProviderClient mFusedLocationClient;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // inflate view
@@ -62,6 +80,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchButton.setOnClickListener(this);
         clearButton = view.findViewById(R.id.ma_sf_button_clear);
         clearButton.setOnClickListener(this);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+        getLocationPermissions();
 
         return view;
     }
@@ -92,13 +113,20 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         distance = distanceEditText.getText().toString();
         radio2Location = radio2LocationEditText.getText().toString();
 
+        try {
+            Double.parseDouble(distance);
+        } catch (Exception e) {
+            distance = "10";
+        }
+
+
         locationType = null;
         location = null;
 
         if (radioButton1.isChecked()) {
             locationType = "coords";
-            location = "34.0266,-118.2831";
-//            location = getCurrentLocation();
+            if (location == null)
+                location = "34.0266,-118.2831";
         } else {
             locationType = "address";
             location = radio2Location;
@@ -116,6 +144,61 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             URL url = NetworkUtils.buildUrl(keyword, category, distance, locationType, location);
 
             new GetWebDataTask().execute(url);
+        }
+    }
+
+    public void getCurrentLocation() {
+
+        try {
+            if (locationPermissionGranted) {
+                Log.d(TAG, "getCurrentLocation: Creating new task to get location");
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location locationResult) {
+                                // Got last known location. In some rare situations this can be null.
+                                Log.d(TAG, "onSuccess: successfully obtained location");
+
+                                if (locationResult != null) {
+                                    location = Double.toString(locationResult.getLatitude()) + "," + Double.toString(locationResult.getLongitude());
+                                    Log.d(TAG, "onSuccess: location retrieved: " + location);
+                                }
+                            }
+                        });
+            }
+
+        } catch (SecurityException e) {
+            Toast.makeText(getActivity(), "Location permission denied. Cannot access device location.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getLocationPermissions() {
+
+        // request permission if not granted
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "getLocationPermissions: permissions not granted. Trying to request for permissions");
+            locationPermissionGranted = false;
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        } else {
+            Log.d(TAG, "getLocationPermissions: permissions granted. Trying to get location");
+            locationPermissionGranted = true;
+            getCurrentLocation();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0) {
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        locationPermissionGranted = false;
+                        return;
+                    }
+                }
+                locationPermissionGranted = true;
+                getCurrentLocation();
+            }
         }
     }
 
@@ -148,10 +231,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         if (radioButton2.isChecked() && (radio2Location.equals("") || radio2Location == null)) {
             errorRadioLocationTextView.setVisibility(View.VISIBLE);
             validity = false;
-        }
-
-        if (distance == null || distance.equals("")) {
-            distance = "10";
         }
 
         return validity;
