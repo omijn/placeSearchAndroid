@@ -35,7 +35,7 @@ public class Review {
     public String getAuthorPhoto() {
         return authorPhoto;
     }
-    
+
     public String getTimestamp() {
         Date date = new Date(Long.parseLong(timestamp) * 1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

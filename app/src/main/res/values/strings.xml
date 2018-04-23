@@ -28,6 +28,8 @@
         <item>Default</item>
     </string-array>
 
+    <!-- results activity -->
+    <string name="no_results">No results found.</string>
 
     <!--details activity-->
     <string name="da_tab_info">Info</string>
@@ -39,13 +41,20 @@
     
     <string name="google_maps_key">AIzaSyD1lLYLgXAV3QT8diQ-J2P5Av0KyErEag8</string>
 
+    <!--details activity > photos fragment-->
+    <string name="no_photos">No photos found.</string>
+
     <!--details activity > map fragment > travel mode spinner-->
+
     <string-array name="travel_mode">
         <item>Driving</item>
         <item>Walking</item>
         <item>Bicycling</item>
         <item>Transit</item>
     </string-array>
+
+    <!--details activity > reviews fragment > review service spinner-->
+    <string name="no_reviews">No reviews found.</string>
 
     <!--details activity > reviews fragment > review service spinner-->
     <string-array name="review_service">

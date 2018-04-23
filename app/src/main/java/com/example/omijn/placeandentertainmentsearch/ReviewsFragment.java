@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,9 +38,9 @@ public class ReviewsFragment extends Fragment {
 
         String reviewsJson = getArguments().getString("reviews");
 
+        reviewsData = new ArrayList<>();
         try {
             if (reviewsJson != null && !reviewsJson.equals("")) {
-                reviewsData = new ArrayList<>();
                 JSONArray reviews = new JSONArray(reviewsJson);
                 for (int i = 0; i < reviews.length(); i++) {
                     JSONObject review = reviews.getJSONObject(i);
@@ -58,12 +59,22 @@ public class ReviewsFragment extends Fragment {
         }
 
         RecyclerView recyclerView = v.findViewById(R.id.da_rf_rv_reviews);
+        TextView emptyView = v.findViewById(R.id.da_rf_tv_no_reviews);
+
         adapter = new ReviewsAdapter(reviewsData);
 
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        if (reviewsData.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
 
         return v;
 

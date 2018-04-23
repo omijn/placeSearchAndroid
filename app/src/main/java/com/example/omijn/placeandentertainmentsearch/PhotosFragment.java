@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
@@ -34,6 +35,9 @@ public class PhotosFragment extends Fragment {
     private ArrayList<Bitmap> photosData;
     private PhotosAdapter adapter;
 
+    private RecyclerView recyclerView;
+    private TextView emptyView;
+
     public PhotosFragment() {
         // Required empty public constructor
     }
@@ -53,17 +57,25 @@ public class PhotosFragment extends Fragment {
         getPhotos();
 
         // get reference to recyclerview
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.da_pf_rv_photos);
+        recyclerView = v.findViewById(R.id.da_pf_rv_photos);
+        emptyView = v.findViewById(R.id.da_pf_tv_no_photos);
 
         // create new adapter
         adapter = new PhotosAdapter(photosData);
 
-        // TODO: 4/22/18 Set no results screen on empty response in all RecyclerViews
         // set adapter to recyclerview
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        if (photosData.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
 
         return v;
     }
@@ -93,6 +105,14 @@ public class PhotosFragment extends Fragment {
                             Bitmap bitmap = photo.getBitmap();
                             photosData.add(bitmap);
                             adapter.notifyDataSetChanged();
+
+                            if (photosData.isEmpty()) {
+                                recyclerView.setVisibility(View.GONE);
+                                emptyView.setVisibility(View.VISIBLE);
+                            } else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                emptyView.setVisibility(View.GONE);
+                            }
                         }
                     });
                 }
