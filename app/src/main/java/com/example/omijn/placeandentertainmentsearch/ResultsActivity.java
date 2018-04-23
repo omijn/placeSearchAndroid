@@ -1,6 +1,7 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,7 @@ public class ResultsActivity extends AppCompatActivity {
     private ArrayList<PlaceResult> listData;
     private PlaceResultAdapter adapter;
     private ListView listView;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class ResultsActivity extends AppCompatActivity {
             }
         }
 
+
         // TODO: 4/22/18 Change this to a RecyclerView
 
         // new adapter
@@ -77,7 +80,10 @@ public class ResultsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-//                Toast.makeText(ResultsActivity.this, listData.get(position).getName(), Toast.LENGTH_SHORT).show();
+                // show progress dialog
+                progressDialog = new ProgressDialog(view.getContext());
+                progressDialog.setMessage("Fetching results");
+                progressDialog.show();
 
                 String detailsUrl = NetworkUtils.buildDetailsUrl(listData.get(position).getPlace_id());
                 final Intent intent = new Intent(view.getContext(), DetailsActivity.class);
@@ -86,6 +92,8 @@ public class ResultsActivity extends AppCompatActivity {
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, detailsUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.cancel();
+
                         intent.putExtra(Intent.EXTRA_TEXT, response);
                         startActivity(intent);
                     }
