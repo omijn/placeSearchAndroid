@@ -39,6 +39,6 @@ public class Review {
     }
 
     public float getRating() {
-        return Float.valueOf(rating.toString());
+        return Float.valueOf(Double.toString(rating));
     }
 }

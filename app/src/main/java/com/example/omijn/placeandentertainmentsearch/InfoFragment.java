@@ -1,16 +1,15 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 
+import android.media.Rating;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStructure;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
-
-import java.util.Collections;
 
 
 /**
@@ -28,7 +27,7 @@ public class InfoFragment extends Fragment {
     private TextView addressTextView;
     private TextView phoneTextView;
     private TextView priceTextView;
-    private TextView ratingTextView;
+    private RatingBar ratingRatingBar;
     private TextView googlePageTextView;
     private TextView websiteTextView;
 
@@ -76,8 +75,8 @@ public class InfoFragment extends Fragment {
         if (rating != -1) {
             ratingRow = v.findViewById(R.id.da_if_ll_rating);
             ratingRow.setVisibility(View.VISIBLE);
-            ratingTextView = v.findViewById(R.id.da_tv_info_rating);
-            ratingTextView.setText(Double.toString(rating));
+            ratingRatingBar = v.findViewById(R.id.rb_info);
+            ratingRatingBar.setRating(Float.valueOf(Double.toString(rating)));
         }
 
         if (googlePage != null) {

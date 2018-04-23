@@ -82,21 +82,35 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/da_if_ll_rating">
 
-        <TextView
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="30"
-            android:textStyle="bold"
-            android:text="Rating"/>
+            android:layout_weight="30">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Rating"/>
+        </FrameLayout>
 
-        <TextView
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="70"
-            android:id="@+id/da_tv_info_rating"/>
+            android:layout_weight="70">
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:id="@+id/rb_info"
+                style="@android:style/Widget.Material.Light.RatingBar.Small" />
+        </FrameLayout>
+
 
     </LinearLayout>
 
