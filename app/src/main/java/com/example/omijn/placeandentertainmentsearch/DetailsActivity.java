@@ -62,10 +62,6 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-
-        // TODO: 4/22/18 Set Activity label to place name
-
-
         mDetailsActivityPagerAdapter = new DetailsActivityPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -100,6 +96,9 @@ public class DetailsActivity extends AppCompatActivity {
                 mapFragmentLat = placeDetails.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
                 mapFragmentLng = placeDetails.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
                 mapFragmentName = placeDetails.getString("name");
+
+                // set activity label to place name
+                getSupportActionBar().setTitle(mapFragmentName);
 
                 // extract data for reviews fragment
                 JSONArray reviews = placeDetails.optJSONArray("reviews");
