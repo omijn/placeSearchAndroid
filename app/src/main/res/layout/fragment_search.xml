@@ -21,7 +21,7 @@
         android:textColor="@android:color/holo_red_dark"
         android:visibility="gone" />
 
-    <AutoCompleteTextView
+    <EditText
         android:id="@+id/ma_sf_et_keyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/ma_sf_et_radio2_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

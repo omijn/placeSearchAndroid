@@ -69,7 +69,7 @@ public class ResultsActivity extends AppCompatActivity {
         // new adapter
         adapter = new PlaceResultAdapter(this, listData);
 
-        listView = (ListView) findViewById(R.id.lv_place_results);
+        listView = findViewById(R.id.lv_place_results);
         listView.setAdapter(adapter);
 
         final RequestQueue queue = Volley.newRequestQueue(this);

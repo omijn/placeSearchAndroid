@@ -45,8 +45,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
         holder.ratingRatingBar.setRating(data.get(position).getRating());
         holder.reviewTextTextView.setText(data.get(position).getReview());
 
-        // TODO: 4/22/18 implement click listener for viewholder: onclick follow review link
-
     }
 
     @Override

@@ -41,12 +41,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
     private static final String TAG = "SearchFragment";
 
     private ProgressDialog progressDialog;
-    private AutoCompleteTextView keywordEditText;
+    private EditText keywordEditText;
     private Spinner categorySpinner;
     private EditText distanceEditText;
     private RadioButton radioButton1;
     private RadioButton radioButton2;
-    private EditText radio2LocationEditText;
+    private AutoCompleteTextView radio2LocationEditText;
 
     private TextView errorKeywordTextView;
     private TextView errorRadioLocationTextView;
@@ -95,7 +95,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
         mGeoDataClient = Places.getGeoDataClient(view.getContext());
 
         autocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGeoDataClient, BOUNDS, null);
-        keywordEditText.setAdapter(autocompleteAdapter);
+        radio2LocationEditText.setAdapter(autocompleteAdapter);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
         getLocationPermissions();
