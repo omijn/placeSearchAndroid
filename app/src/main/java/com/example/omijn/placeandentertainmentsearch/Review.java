@@ -1,5 +1,8 @@
 package com.example.omijn.placeandentertainmentsearch;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Review {
     private String review;
     private String author;
@@ -32,10 +35,11 @@ public class Review {
     public String getAuthorPhoto() {
         return authorPhoto;
     }
-
-    // TODO: 4/22/18 Convert timestamp to YYYY-MM-DD HH:MM:SS
+    
     public String getTimestamp() {
-        return timestamp;
+        Date date = new Date(Long.parseLong(timestamp) * 1000);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date);
     }
 
     public float getRating() {
