@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:text="From"/>
 
-    <EditText
+    <AutoCompleteTextView
+        android:id="@+id/da_mf_et_from"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:hint="@string/da_mf_from_hint"
         />
 
     <TextView

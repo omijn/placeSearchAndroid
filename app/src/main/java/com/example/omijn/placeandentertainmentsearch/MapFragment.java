@@ -9,13 +9,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 
 import com.google.android.gms.common.oob.SignUp;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
@@ -25,6 +29,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     private static final String TAG = "MapFragment";
+    private AutoCompleteTextView fromEditText;
+    private PlaceAutocompleteAdapter autocompleteAdapter;
+    private GeoDataClient mGeoDataClient;
+    private static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(-85, 180) ,new LatLng(85, -180));
 
     public MapFragment() {
         // Required empty public constructor
@@ -45,6 +53,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             mapFragment = SupportMapFragment.newInstance();
             fragmentTransaction.replace(R.id.da_mf_map, mapFragment).commit();
         }
+
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(v.getContext());
+
+        fromEditText = v.findViewById(R.id.da_mf_et_from);
+        autocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGeoDataClient, BOUNDS, null);
+        fromEditText.setAdapter(autocompleteAdapter);
 
         mapFragment.getMapAsync(this);
         return v;

@@ -69,6 +69,10 @@
     <!--details activity > photos fragment-->
     <string name="no_photos">No photos found.</string>
 
+    <!--details activity > map fragment -->
+    <string name="da_mf_from_hint">Type in the location</string>
+
+
     <!--details activity > map fragment > travel mode spinner-->
 
     <string-array name="travel_mode">
@@ -92,7 +96,7 @@
         <item>Default Order</item>
         <item>Rating (Highest First)</item>
         <item>Rating (Lowest First)</item>
-        <item>Date (Most Recent First)</item>
+        <item>Date (Newest First)</item>
         <item>Date (Oldest First)</item>
     </string-array>
 
