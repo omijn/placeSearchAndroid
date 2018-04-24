@@ -1,28 +1,28 @@
 package com.example.omijn.placeandentertainmentsearch;
 
+import android.content.SharedPreferences;
+
 public class PlaceResult {
     private String name;
     private String address;
     private String icon;
     private String place_id;
-    private String coordinates;
     private boolean isFavorite;
 
-    public PlaceResult(String name, String address, String icon, String place_id, String coordinates) {
+    public PlaceResult(String name, String address, String icon, String place_id, boolean isFavorite) {
         this.name = name;
         this.address = address;
         this.icon = icon;
         this.place_id = place_id;
-        this.coordinates = coordinates;
-        this.isFavorite = false;
-    }
-
-    public void setFavorite(boolean favoriteState) {
-        isFavorite = favoriteState;
+        this.isFavorite = isFavorite;
     }
 
     public boolean isFavorite() {
         return isFavorite;
+    }
+
+    public void setFavorite(boolean favoriteState) {
+        isFavorite = favoriteState;
     }
 
     public String getName() {
@@ -39,9 +39,5 @@ public class PlaceResult {
 
     public String getPlace_id() {
         return place_id;
-    }
-
-    public String getCoordinates() {
-        return coordinates;
     }
 }

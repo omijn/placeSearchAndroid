@@ -75,8 +75,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultHo
             favoriteImageView = itemView.findViewById(R.id.ra_iv_favorite_toggle);
             detailsClickableLL = itemView.findViewById(R.id.ra_ll_details_clickable_surface);
 
-
-
             detailsClickableLL.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -53,6 +53,9 @@
         <item>Zoo</item>
     </string-array>
 
+    <!-- main activity > favorites fragment -->
+    <string name="no_favorites">No favorites found.</string>
+
     <!-- results activity -->
     <string name="no_results">No results found.</string>
 
@@ -98,5 +101,7 @@
         <item>Date (Oldest First)</item>
     </string-array>
 
-
+    <!-- shared preferences for favorites -->
+    <string name="fav_shared_pref_file">com.example.omijn.placeandentertainmentsearch.favorites_SPF</string>
+    <string name="fav_json">favoritePlaceResultsJSON</string>
 </resources>

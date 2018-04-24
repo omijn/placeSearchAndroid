@@ -1,33 +1,19 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 // TODO: 4/22/18 Remove unused imports
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +24,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     private DetailsActivityPagerAdapter mDetailsActivityPagerAdapter;
     private ViewPager mViewPager;
-    private String textFromResultsActivity;
 
     // info fragment data
     private String infoFragmentAddress;
@@ -60,7 +45,7 @@ public class DetailsActivity extends AppCompatActivity {
     private String reviewsFragmentReviews;
 
     // twitter
-    private final static String hashtags = "TravelAndEntertainmentSearch";
+    private final static String twitterHashtags = "TravelAndEntertainmentSearch";
     private String twitterText;
 
 
@@ -89,7 +74,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void openTweetLink() {
-        String twitterLink = "https://twitter.com/intent/tweet?text=" + twitterText + "&hashtags=" + hashtags;
+        String twitterLink = "https://twitter.com/intent/tweet?text=" + twitterText + "&hashtags=" + twitterHashtags;
         Uri uri = Uri.parse(twitterLink);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
