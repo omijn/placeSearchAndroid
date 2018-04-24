@@ -181,6 +181,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
                                     location = Double.toString(locationResult.getLatitude()) + "," + Double.toString(locationResult.getLongitude());
                                     Log.d(TAG, "onSuccess: location retrieved: " + location);
                                 }
+
+                                // TODO: 4/24/18 Request location if locationResult is null
                             }
                         });
             }
@@ -281,8 +283,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
         @Override
         protected void onPostExecute(String s) {
             if (s != null && !s.equals("")) {
-                // success toast
-                Toast.makeText(getActivity(), "Successfully completed AsyncTask.", Toast.LENGTH_SHORT).show();
 
                 progressDialog.cancel();
 

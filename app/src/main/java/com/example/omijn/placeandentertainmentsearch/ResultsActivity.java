@@ -111,7 +111,6 @@ public class ResultsActivity extends AppCompatActivity implements ResultsAdapter
             emptyView.setVisibility(View.GONE);
         }
 
-
     }
 
     @Override

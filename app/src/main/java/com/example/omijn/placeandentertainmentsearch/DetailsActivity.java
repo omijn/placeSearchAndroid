@@ -1,7 +1,9 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 // TODO: 4/22/18 Remove unused imports
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,6 +16,7 @@ import android.support.design.widget.TabLayout;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     // photos fragment data
     private String placeId;
+    private String icon;
 
     // map fragment data
     private Double mapFragmentLat;
@@ -48,10 +52,24 @@ public class DetailsActivity extends AppCompatActivity {
     private final static String twitterHashtags = "TravelAndEntertainmentSearch";
     private String twitterText;
 
+    private SharedPreferences favoritesSharedPreferences;
+    private SharedPreferences.Editor favoritesEditor;
+    private JSONArray favorites;
+    private Toast favoritesToast;
+
+    private Menu menu;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.details_menu, menu);
+
+        if (Utils.isFavorite(placeId, favorites).isFavorite()) {
+            menu.findItem(R.id.da_action_favorite).setIcon(R.drawable.heart_fill_white);
+        } else {
+            menu.findItem(R.id.da_action_favorite).setIcon(R.drawable.heart_outline_white);
+        }
         return true;
     }
 
@@ -62,7 +80,7 @@ public class DetailsActivity extends AppCompatActivity {
                 openTweetLink();
                 break;
             case R.id.da_action_favorite:
-//                toggleFavorite();
+                toggleFavorite();
                 break;
         }
 
@@ -83,6 +101,61 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void toggleFavorite() {
+        String favoritesToastMsg = null;
+
+        // try to get shared preferences JSON file if it exists.
+        try {
+            favorites = new JSONArray(favoritesSharedPreferences.getString(getString(R.string.fav_json), ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            favorites = new JSONArray();
+        }
+
+        Utils.FavoriteCheckResult favCheckResult = Utils.isFavorite(placeId, favorites);
+
+        // toggle favorites state
+        // if selected item is currently a favorite item, un-favorite it (remove from sharedpreferences)
+        if (favCheckResult.isFavorite()) {
+            favorites.remove(favCheckResult.getFavoritePosition());
+            favoritesToastMsg = mapFragmentName + " was removed from favorites.";
+            menu.findItem(R.id.da_action_favorite).setIcon(R.drawable.heart_outline_white);
+        } else {    // else, favorite it (add to sharedpreferences)
+
+            // create JSONObject containing data of new favorite
+            JSONObject newFavorite = new JSONObject();
+            try {
+                newFavorite.put("place_id", placeId);
+                newFavorite.put("name", mapFragmentName);
+                newFavorite.put("address", infoFragmentAddress);
+                newFavorite.put("icon", icon);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            // insert new favorite into JSONArray
+            favorites.put(newFavorite);
+
+            // create toast message
+            favoritesToastMsg = mapFragmentName + " was added to favorites.";
+            menu.findItem(R.id.da_action_favorite).setIcon(R.drawable.heart_fill_white);
+        }
+
+        // put JSONArray back into shared preferences file
+        favoritesEditor.putString(getString(R.string.fav_json), favorites.toString());
+
+        // save changes
+        favoritesEditor.apply();
+
+        if (favoritesToast != null) {
+            favoritesToast.cancel();
+        }
+
+        favoritesToast = Toast.makeText(this, favoritesToastMsg, Toast.LENGTH_SHORT);
+        favoritesToast.show();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,13 +163,23 @@ public class DetailsActivity extends AppCompatActivity {
 
         // TODO: 4/23/18 Remove ActionBar shadow
 
+        favoritesSharedPreferences = getSharedPreferences(getString(R.string.fav_shared_pref_file), MODE_PRIVATE);
+        favoritesEditor = favoritesSharedPreferences.edit();
+
+        try {
+            favorites = new JSONArray(favoritesSharedPreferences.getString(getString(R.string.fav_json), ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            favorites = new JSONArray();
+        }
+
         mDetailsActivityPagerAdapter = new DetailsActivityPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.da_vp_container);
+        mViewPager = findViewById(R.id.da_vp_container);
         mViewPager.setAdapter(mDetailsActivityPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -116,6 +199,7 @@ public class DetailsActivity extends AppCompatActivity {
                 infoFragmentRating = placeDetails.optDouble("rating", -1);
                 infoFragmentGooglePage = placeDetails.optString("url", null);
                 infoFragmentWebsite = placeDetails.optString("website", null);
+                icon = placeDetails.optString("icon", null);
 
                 // extract data for photos fragment
                 placeId = placeDetails.getString("place_id");
