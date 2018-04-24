@@ -45,6 +45,12 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultHo
         holder.addressTextView.setText(currentPlaceResult.getAddress());
         Picasso.get().load(currentPlaceResult.getIcon()).into(holder.iconImageView);
 
+        if (currentPlaceResult.isFavorite()) {
+            holder.favoriteImageView.setImageResource(R.drawable.heart_fill_red);
+        } else {
+            holder.favoriteImageView.setImageResource(R.drawable.heart_outline_black);
+        }
+
     }
 
     @Override
@@ -68,6 +74,8 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultHo
             iconImageView = itemView.findViewById(R.id.iv_place_result_icon);
             favoriteImageView = itemView.findViewById(R.id.ra_iv_favorite_toggle);
             detailsClickableLL = itemView.findViewById(R.id.ra_ll_details_clickable_surface);
+
+
 
             detailsClickableLL.setOnClickListener(new View.OnClickListener() {
                 @Override

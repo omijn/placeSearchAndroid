@@ -124,8 +124,21 @@ public class ResultsActivity extends AppCompatActivity implements ResultsAdapter
 
     @Override
     public void onListItemFavoriteToggleClicked(int clickedItemIndex) {
-        String favoritesConfirmationMessage = listData.get(clickedItemIndex).getName() + " was added to favorites.";
-        Toast.makeText(this, favoritesConfirmationMessage, Toast.LENGTH_SHORT).show();
+        PlaceResult currentResult = listData.get(clickedItemIndex);
+        String favoritesToast = null;
+
+        // toggle favorites state
+        if (currentResult.isFavorite()) {
+            currentResult.setFavorite(false);
+            favoritesToast = currentResult.getName() + " was removed from favorites.";
+        } else {
+            currentResult.setFavorite(true);
+            favoritesToast = currentResult.getName() + " was added to favorites.";
+        }
+
+        adapter.notifyItemChanged(clickedItemIndex);
+
+        Toast.makeText(this, favoritesToast, Toast.LENGTH_SHORT).show();
     }
 
 }

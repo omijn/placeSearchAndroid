@@ -6,11 +6,7 @@ public class PlaceResult {
     private String icon;
     private String place_id;
     private String coordinates;
-
-    public PlaceResult(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
+    private boolean isFavorite;
 
     public PlaceResult(String name, String address, String icon, String place_id, String coordinates) {
         this.name = name;
@@ -18,6 +14,15 @@ public class PlaceResult {
         this.icon = icon;
         this.place_id = place_id;
         this.coordinates = coordinates;
+        this.isFavorite = false;
+    }
+
+    public void setFavorite(boolean favoriteState) {
+        isFavorite = favoriteState;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
     public String getName() {
