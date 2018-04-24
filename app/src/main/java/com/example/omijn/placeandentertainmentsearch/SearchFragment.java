@@ -3,6 +3,7 @@ package com.example.omijn.placeandentertainmentsearch;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -24,13 +25,22 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.net.URL;
@@ -67,6 +77,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
     private FusedLocationProviderClient mFusedLocationClient;
     private PlaceAutocompleteAdapter autocompleteAdapter;
     private GeoDataClient mGeoDataClient;
+    private LocationCallback mLocationCallback;
     private static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(-85, 180) ,new LatLng(85, -180));
 
 
@@ -98,6 +109,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
         radio2LocationEditText.setAdapter(autocompleteAdapter);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location loc : locationResult.getLocations()) {
+                    location = Double.toString(loc.getLatitude()) + "," + Double.toString(loc.getLongitude());
+                    Log.d(TAG, "onLocationResult: After making location request, location = " + location);
+                    break;
+                }
+            }
+        };
         getLocationPermissions();
 
         return view;
@@ -135,14 +159,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
             distance = "10";
         }
 
-
-        locationType = null;
-        location = null;
+        Log.d(TAG, "performSearch: Trying to search");
 
         if (radioButton1.isChecked()) {
             locationType = "coords";
-            if (location == null)
-                location = "34.0266,-118.2831";
+            getCurrentLocation();
+            Log.d(TAG, "performSearch: " + location);
+            if (location == null) {
+//                location = "34.0266,-118.2831";
+//                location = "13,78";
+            }
+
         } else {
             locationType = "address";
             location = radio2Location;
@@ -178,11 +205,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
                                 Log.d(TAG, "onSuccess: successfully obtained location");
 
                                 if (locationResult != null) {
-                                    location = Double.toString(locationResult.getLatitude()) + "," + Double.toString(locationResult.getLongitude());
+                                    updateLocation(Double.toString(locationResult.getLatitude()) + "," + Double.toString(locationResult.getLongitude()));
                                     Log.d(TAG, "onSuccess: location retrieved: " + location);
                                 }
 
-                                // TODO: 4/24/18 Request location if locationResult is null
+                                createLocationRequest();
                             }
                         });
             }
@@ -190,6 +217,58 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
         } catch (SecurityException e) {
             Toast.makeText(getActivity(), "Location permission denied. Cannot access device location.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    protected void createLocationRequest() {
+        final LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(getActivity());
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(getActivity(), new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                try {
+                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+                } catch (SecurityException e) {
+
+                }
+            }
+        });
+
+        task.addOnFailureListener(getActivity(), new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(getActivity(),
+                                0x1);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+
+    }
+
+    public void updateLocation(String l) {
+        location = l;
+        Log.d(TAG, "updateLocation: " + location);
     }
 
     public void getLocationPermissions() {
