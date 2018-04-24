@@ -1,7 +1,6 @@
 package com.example.omijn.placeandentertainmentsearch;
 
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

@@ -32,13 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- TODO Make icon and text appear on same line -->
-
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem"
+                android:icon="@drawable/search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/search"
                 android:text="@string/ma_tab_search" />
 
             <android.support.design.widget.TabItem

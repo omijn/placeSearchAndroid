@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +22,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -41,9 +46,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
-import java.io.IOException;
-import java.net.URL;
 
 
 public class SearchFragment extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -166,8 +168,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
             getCurrentLocation();
             Log.d(TAG, "performSearch: " + location);
             if (location == null) {
-//                location = "34.0266,-118.2831";
-//                location = "13,78";
+//                location = "34.0266,-118.2831"; // fallback
             }
 
         } else {
@@ -184,9 +185,35 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
             progressDialog.show();
 
             // build URL using form data
-            URL url = NetworkUtils.buildUrl(keyword, category, distance, locationType, location);
+            String url = NetworkUtils.buildUrl(keyword, category, distance, locationType, location).toString();
 
-            new GetWebDataTask().execute(url);
+            // show progress dialog
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Fetching results");
+            progressDialog.show();
+
+            final RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+            final Intent intent = new Intent(getActivity(), ResultsActivity.class);
+
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    progressDialog.cancel();
+                    intent.putExtra(Intent.EXTRA_TEXT, response);
+                    startActivity(intent);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getActivity(), "A network error occurred. Please try again later.", Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();
+                }
+            });
+
+            queue.add(stringRequest);
+
         } else {
             Toast.makeText(getActivity(), R.string.fix_errors, Toast.LENGTH_SHORT).show();
         }
@@ -338,39 +365,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Go
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-
-    // TODO: 4/22/18 Convert to Volley request
-
-    public class GetWebDataTask extends AsyncTask<URL, Void, String> {
-        @Override
-        protected String doInBackground(URL... urls) {
-            URL url = urls[0];
-
-            // make HTTP request
-            String jsonData = null;
-            try {
-                jsonData = NetworkUtils.getResponseFromHttpUrl(url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return jsonData;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null && !s.equals("")) {
-
-                progressDialog.cancel();
-
-                // start new activity and pass JSON string result through intent
-                Intent intent = new Intent(getActivity(), ResultsActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, s);
-                startActivity(intent);
-            }
-        }
     }
 
 }

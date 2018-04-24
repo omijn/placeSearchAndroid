@@ -1,7 +1,5 @@
 package com.example.omijn.placeandentertainmentsearch;
 
-import android.content.SharedPreferences;
-
 public class PlaceResult {
     private String name;
     private String address;
