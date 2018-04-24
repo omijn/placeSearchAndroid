@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +32,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ResultsActivity extends AppCompatActivity {
+public class ResultsActivity extends AppCompatActivity implements ResultsAdapter.ListItemClickListener {
 
     private ArrayList<PlaceResult> listData;
-    private PlaceResultAdapter adapter;
-    private ListView listView;
+    private ResultsAdapter adapter;
+    private RecyclerView recyclerView;
     private ProgressDialog progressDialog;
 
     @Override
@@ -67,82 +69,57 @@ public class ResultsActivity extends AppCompatActivity {
         }
 
 
-        // TODO: 4/22/18 Change this to a RecyclerView
-
         // new adapter
-        adapter = new PlaceResultAdapter(this, listData);
+        adapter = new ResultsAdapter(listData, this);
 
-        listView = findViewById(R.id.lv_place_results);
-        listView.setAdapter(adapter);
+        recyclerView = findViewById(R.id.rv_place_results);
+        recyclerView.setAdapter(adapter);
+
+        TextView emptyView = findViewById(R.id.ra_tv_no_results);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        if (listData.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
+
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        // show progress dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Fetching results");
+        progressDialog.show();
 
         final RequestQueue queue = Volley.newRequestQueue(this);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        String detailsUrl = NetworkUtils.buildDetailsUrl(listData.get(clickedItemIndex).getPlace_id());
+        final Intent intent = new Intent(this, DetailsActivity.class);
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, detailsUrl, new Response.Listener<String>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-                // show progress dialog
-                progressDialog = new ProgressDialog(view.getContext());
-                progressDialog.setMessage("Fetching results");
-                progressDialog.show();
+            public void onResponse(String response) {
+                progressDialog.cancel();
 
-                String detailsUrl = NetworkUtils.buildDetailsUrl(listData.get(position).getPlace_id());
-                final Intent intent = new Intent(view.getContext(), DetailsActivity.class);
-
-
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, detailsUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.cancel();
-
-                        intent.putExtra(Intent.EXTRA_TEXT, response);
-                        startActivity(intent);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(view.getContext(), "A network error occurred.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                queue.add(stringRequest);
+                intent.putExtra(Intent.EXTRA_TEXT, response);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "A network error occurred.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        queue.add(stringRequest);
     }
 
-    public class PlaceResultAdapter extends ArrayAdapter<PlaceResult> {
-
-        public PlaceResultAdapter(Activity context, ArrayList<PlaceResult> data) {
-            super(context, 0, data);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View listItemView = convertView;
-            if (listItemView == null) {
-                listItemView = LayoutInflater.from(getContext()).inflate(R.layout.place_result_list_item, parent, false);
-            }
-
-            PlaceResult currentPlaceResult = getItem(position);
-
-            // fill name
-            TextView nameTextView = listItemView.findViewById(R.id.tv_place_result_name);
-            nameTextView.setText(currentPlaceResult.getName());
-
-            // fill address
-            TextView addressTextView = listItemView.findViewById(R.id.tv_place_result_address);
-            addressTextView.setText(currentPlaceResult.getAddress());
-
-            // fill icon
-            ImageView iconImageView = listItemView.findViewById(R.id.iv_place_result_icon);
-            Picasso.get().load(currentPlaceResult.getIcon()).into(iconImageView);
-
-            return listItemView;
-        }
-    }
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        adapter.notifyDataSetChanged();
-//    }
 }

@@ -73,8 +73,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewHo
 
         @Override
         public void onClick(View v) {
-            int clickedPostition = getAdapterPosition();
-            clickListener.onListItemClick(clickedPostition);
+            int clickedPosition = getAdapterPosition();
+            clickListener.onListItemClick(clickedPosition);
         }
     }
 }
