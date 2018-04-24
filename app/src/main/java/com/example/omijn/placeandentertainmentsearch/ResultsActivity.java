@@ -38,6 +38,7 @@ public class ResultsActivity extends AppCompatActivity implements ResultsAdapter
     private ResultsAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressDialog progressDialog;
+    private Toast favoritesToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,20 +126,26 @@ public class ResultsActivity extends AppCompatActivity implements ResultsAdapter
     @Override
     public void onListItemFavoriteToggleClicked(int clickedItemIndex) {
         PlaceResult currentResult = listData.get(clickedItemIndex);
-        String favoritesToast = null;
+        String favoritesToastMsg = null;
+
 
         // toggle favorites state
         if (currentResult.isFavorite()) {
             currentResult.setFavorite(false);
-            favoritesToast = currentResult.getName() + " was removed from favorites.";
+            favoritesToastMsg = currentResult.getName() + " was removed from favorites.";
         } else {
             currentResult.setFavorite(true);
-            favoritesToast = currentResult.getName() + " was added to favorites.";
+            favoritesToastMsg = currentResult.getName() + " was added to favorites.";
         }
 
         adapter.notifyItemChanged(clickedItemIndex);
 
-        Toast.makeText(this, favoritesToast, Toast.LENGTH_SHORT).show();
+        if (favoritesToast != null) {
+            favoritesToast.cancel();
+        }
+
+        favoritesToast = Toast.makeText(this, favoritesToastMsg, Toast.LENGTH_SHORT);
+        favoritesToast.show();
     }
 
 }
