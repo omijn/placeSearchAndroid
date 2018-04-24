@@ -24,7 +24,8 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultHo
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
+        void onListItemDetailsSurfaceClicked(int clickedItemIndex);
+        void onListItemFavoriteToggleClicked(int clickedItemIndex);
     }
 
     @NonNull
@@ -51,7 +52,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultHo
         return data.size();
     }
 
-    public class ResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ResultHolder extends RecyclerView.ViewHolder {
 
         private TextView nameTextView;
         private TextView addressTextView;
@@ -68,13 +69,23 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultHo
             favoriteImageView = itemView.findViewById(R.id.ra_iv_favorite_toggle);
             detailsClickableLL = itemView.findViewById(R.id.ra_ll_details_clickable_surface);
 
-            detailsClickableLL.setOnClickListener(this);
+            detailsClickableLL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int clickedPosition = getAdapterPosition();
+                    clickListener.onListItemDetailsSurfaceClicked(clickedPosition);
+                }
+            });
+
+            favoriteImageView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int clickedPosition = getAdapterPosition();
+                    clickListener.onListItemFavoriteToggleClicked(clickedPosition);
+                }
+            });
         }
 
-        @Override
-        public void onClick(View v) {
-            int clickedPosition = getAdapterPosition();
-            clickListener.onListItemClick(clickedPosition);
-        }
     }
 }

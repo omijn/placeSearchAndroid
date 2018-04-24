@@ -92,7 +92,7 @@ public class ResultsActivity extends AppCompatActivity implements ResultsAdapter
     }
 
     @Override
-    public void onListItemClick(int clickedItemIndex) {
+    public void onListItemDetailsSurfaceClicked(int clickedItemIndex) {
         // show progress dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Fetching results");
@@ -120,6 +120,12 @@ public class ResultsActivity extends AppCompatActivity implements ResultsAdapter
         });
 
         queue.add(stringRequest);
+    }
+
+    @Override
+    public void onListItemFavoriteToggleClicked(int clickedItemIndex) {
+        String favoritesConfirmationMessage = listData.get(clickedItemIndex).getName() + " was added to favorites.";
+        Toast.makeText(this, favoritesConfirmationMessage, Toast.LENGTH_SHORT).show();
     }
 
 }
